@@ -404,6 +404,73 @@
   </div>
 </section>
 
+    <!-- Adoption Form -->
+<div id="adoption-form" style="
+  background:#fffaf3;
+  padding:60px 80px;
+  border-radius:20px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.1);
+  width:1000%;
+  max-width:1200px;
+  margin:60px auto;
+">
+  <h2 style="color:#ff914d; font-size:2.2em; margin-bottom:10px; text-align:center;">
+    🐾 Adoption Form
+  </h2>
+  <p style="color:#5a4635; margin-bottom:40px; text-align:center; font-size:1.1em;">
+    Fill out this form to adopt your new furry friend!
+  </p>
+
+  <form style="
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(400px,1fr));
+    gap:25px;
+  ">
+    <div>
+      <label style="font-weight:600;">Full Name:</label>
+      <input type="text" placeholder="Enter your full name" style="width:100%; padding:12px; border-radius:10px; border:1px solid #d6b99e;">
+    </div>
+
+    <div>
+      <label style="font-weight:600;">Contact Number:</label>
+      <input type="tel" placeholder="09XXXXXXXXX" style="width:100%; padding:12px; border-radius:10px; border:1px solid #d6b99e;">
+    </div>
+
+    <div>
+      <label style="font-weight:600;">Email Address:</label>
+      <input type="email" placeholder="youremail@example.com" style="width:100%; padding:12px; border-radius:10px; border:1px solid #d6b99e;">
+    </div>
+
+    <div>
+      <label style="font-weight:600;">Preferred Pet:</label>
+      <select style="width:100%; padding:12px; border-radius:10px; border:1px solid #d6b99e;">
+        <option>Dog</option>
+        <option>Cat</option>
+      </select>
+    </div>
+
+    <div style="grid-column:1/-1;">
+      <label style="font-weight:600;">Pet Name (if specific):</label>
+      <input type="text" placeholder="Enter the pet’s name (optional)" style="width:100%; padding:12px; border-radius:10px; border:1px solid #d6b99e;">
+    </div>
+
+    <div style="grid-column:1/-1;">
+      <label style="font-weight:600;">Reason for Adopting:</label>
+      <textarea rows="4" placeholder="Why do you want to adopt this pet?" style="width:100%; padding:12px; border-radius:10px; border:1px solid #d6b99e;"></textarea>
+    </div>
+
+    <div style="grid-column:1/-1; text-align:center;">
+      <button type="submit" style="
+        background:#ff914d; color:white; font-weight:600;
+        padding:14px 30px; border:none; border-radius:12px;
+        font-size:1.1em; cursor:pointer; transition:background 0.3s;
+      " onmouseover="this.style.background='#e6762d'" onmouseout="this.style.background='#ff914d'">
+        Submit Adoption Form
+      </button>
+    </div>
+  </form>
+</div>
+
 
     <!-- TRAINING -->
      <section id="training">
@@ -705,4 +772,5 @@
 </script>
 </body>
 </html>
+
 
