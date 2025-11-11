@@ -18,7 +18,57 @@
     margin:0; font-family:Inter, system-ui, Arial, sans-serif;
     background:var(--bg); color:var(--text); line-height:1.4;
   }
+  /* LOGIN SCREEN */
+#login-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fff2e1, #ffe0c7);
+  z-index: 10000;
+}
 
+  #login-box {
+  background:#fffaf3;
+  padding:60px 80px;
+  border-radius:20px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.1);
+  width:1000%;
+  max-width:1200px;
+  margin:60px auto;
+}
+
+#login-box h1 {
+  margin-bottom: 10px;
+  color: #ff914d;
+}
+
+#login-box input {
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  border: 1px solid #e2c5a0;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+#login-box button {
+  width: 100%;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+#login-box button:hover {
+  background: var(--accent-dark);
+}
+  
   /* INTRO */
   #intro-screen{
     position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
@@ -105,6 +155,20 @@
 </style>
 </head>
 <body>
+
+  <!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div id="login-box">
+    <h1>🐾 MeowWoof Login</h1>
+    <p>Welcome back! Please sign in to continue.</p>
+    <form id="login-form">
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <p id="login-error" style="color:red; display:none;">⚠ Please fill in all fields!</p>
+  </div>
+</div>
 
   <!-- INTRO / SELECTION -->
   <div id="intro-screen" aria-hidden="false">
@@ -688,7 +752,33 @@
   });
 </script>
 
+    <script>
+  const loginForm = document.getElementById('login-form');
+  const loginScreen = document.getElementById('login-screen');
+  const introScreen = document.getElementById('intro-screen');
+  const loginError = document.getElementById('login-error');
 
+  loginForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value.trim();
+
+    if(user === "" || pass === ""){
+      loginError.style.display = "block";
+      return;
+    }
+
+    // Optional: you can set specific login credentials
+    // if(user === "admin" && pass === "1234") { ... }
+
+    loginError.style.display = "none";
+    loginScreen.style.display = "none";  // hide login
+    introScreen.style.display = "flex";  // show intro
+  });
+
+  // hide intro by default
+  introScreen.style.display = "none";
+</script>
 
   <!-- PAW LOADER -->
   <div class="paw-loader" id="paw-loader"></div>
@@ -772,5 +862,6 @@
 </script>
 </body>
 </html>
+
 
 
