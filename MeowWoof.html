@@ -1,7 +1,873 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset<!DOCTYPE html>
+<html lang="en">
+<head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MeowWoof - PetLife</title>
+<style>
+  :root{
+    --accent:#ff914d;
+    --accent-dark:#e6762d;
+    --nav:#ffb347;
+    --bg:#fff8f0;
+    --card:#fffdf9;
+    --text:#3a2b1f;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter, system-ui, Arial, sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.4;
+  }
+  /* LOGIN SCREEN */
+#login-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fff2e1, #ffe0c7);
+  z-index: 10000;
+}
+
+  #login-box {
+  background:#fffaf3;
+  padding:60px 80px;
+  border-radius:20px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.1);
+  width:1000%;
+  max-width:1200px;
+  margin:60px auto;
+}
+
+#login-box h1 {
+  margin-bottom: 10px;
+  color: #ff914d;
+}
+
+#login-box input {
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  border: 1px solid #e2c5a0;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+#login-box button {
+  width: 100%;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+#login-box button:hover {
+  background: var(--accent-dark);
+}
+  
+  /* INTRO */
+  #intro-screen{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(180deg, rgba(255,236,217,0.95), rgba(255,241,230,0.95));
+    z-index:9999; padding:24px; text-align:center;
+  }
+  #intro-inner{
+    max-width:900px; width:100%; border-radius:14px; padding:28px;
+    background:#fffdf9;
+    box-shadow:0 12px 30px rgba(0,0,0,0.12);
+  }
+  #intro-inner h1{ margin:0 0 10px; font-size:2.1rem }
+  #intro-inner p{ margin:0 0 18px; color:#5a4635 }
+  .intro-actions{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:12px}
+  .intro-actions button{ background:var(--accent); color:white; border:none; padding:12px 18px; border-radius:10px; cursor:pointer; font-weight:600}
+  .intro-actions button:hover{ background:var(--accent-dark) }
+
+  /* NAV */
+  .nav-bar{
+    display:flex; gap:10px; align-items:center; justify-content:center;
+    background:var(--nav); padding:10px 8px; position:sticky; top:0; z-index:900;
+    border-bottom:2px solid #e48b23; flex-wrap:wrap;
+  }
+  .nav-bar a, .nav-bar button{
+    text-decoration:none; color:white; font-weight:700; padding:8px 12px; border-radius:8px;
+    background:transparent; border:none; cursor:pointer;
+  }
+  .nav-bar a:hover{ background:rgba(0,0,0,0.1) }
+  #back-btn{ background:#ff6666; border-radius:8px; padding:8px 12px; display:inline-block }
+  #back-btn:hover{ background:#cc4444 }
+
+  /* PAGE */
+  .content{ padding:100px 24px 48px; max-width:1200px; margin:0 auto }
+  section{ display:none; opacity:0; transition:opacity .28s ease; min-height:60vh; margin-bottom:28px;
+    background:#fff4e6; padding:18px; border-radius:12px; box-shadow:4px 6px 18px rgba(0,0,0,0.06) }
+  section.active{ display:block; opacity:1 }
+
+  .hero{
+    text-align:center; padding:32px; border-radius:12px; background:linear-gradient(180deg,#fff0df,#fff7f0);
+    box-shadow:0 8px 20px rgba(0,0,0,0.06)
+  }
+  .hero h2{ margin:0 0 8px; font-size:1.9rem }
+  .hero p{ margin:0 0 14px; color:#5a4635 }
+
+  /* GRIDS */
+  .grid{
+    display:grid; gap:16px; margin-top:18px;
+  }
+  .grid.cols-3{ grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); }
+
+  .card{
+    background:var(--card); padding:12px; border-radius:12px; box-shadow:0 8px 18px rgba(0,0,0,0.06);
+    cursor:pointer; text-align:left; transition:transform .15s ease;
+  }
+  .card:hover{ transform:translateY(-6px) }
+  .card h3{ margin:6px 0 8px; font-size:1.05rem }
+  .card p{ margin:0; color:#5a4635; font-size:.95rem }
+  .card img{ width:100%; border-radius:10px; margin-top:10px; display:none; height:160px; object-fit:cover; }
+  .card.open img{ display:block }
+
+  /* DOG/CAT filtering */
+  .dog-only, .cat-only{ display:none !important }
+  body.pet-dog .dog-only{ display:block !important }
+  body.pet-cat .cat-only{ display:block !important }
+
+  /* --- PAW LOADER --- */
+  .paw-loader {
+    position: fixed; top:0; left:0; width:100%; height:100%;
+    background: rgba(255,255,255,0.85);
+    display:flex; justify-content:center; align-items:center; flex-wrap:wrap;
+    z-index:2000; opacity:0; pointer-events:none;
+    transition: opacity 0.3s ease;
+  }
+  .paw-loader.active { opacity:1; pointer-events:all }
+  .paw {
+    width:50px; height:50px;
+    background-size:contain; background-repeat:no-repeat; background-position:center;
+    opacity:0; transform:scale(0.5);
+    animation:pawAnim 0.6s ease forwards;
+  }
+  @keyframes pawAnim {
+    to{ opacity:1; transform:scale(1); }
+  }
+</style>
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div id="login-box">
+    <h1>🐾 MeowWoof Login</h1>
+    <p>Welcome back! Please sign in to continue.</p>
+    <form id="login-form">
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <p id="login-error" style="color:red; display:none;">⚠ Please fill in all fields!</p>
+  </div>
+</div>
+
+  <!-- INTRO / SELECTION -->
+  <div id="intro-screen" aria-hidden="false">
+    <div id="intro-inner">
+      <h1>🐾 Welcome to MeowWoof</h1>
+      <p><strong>MeowWoof</strong> is your friendly corner for everything dogs and cats — guides, nutrition, training, health, and adoption. Choose which pet you want tips for.</p>
+      <div class="intro-actions">
+        <button id="choose-dog">I’m here for Dogs 🐶</button>
+        <button id="choose-cat">I’m here for Cats 🐱</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav-bar" style="display:none">
+    <a href="#" data-target="home">Home</a>
+    <a href="#" data-target="gallery">Gallery</a>
+    <a href="#" data-target="care">Care Guides</a>
+    <a href="#" data-target="health">Health</a>
+    <a href="#" data-target="food">Food</a>
+    <a href="#" data-target="adopt">Adoption</a>
+    <a href="#" data-target="training">Training</a>
+    <a href="#" data-target="events">Events</a>
+    <a href="#" data-target="feedback">Feedback</a>
+    <button id="back-btn">⬅ Back</button>
+  </nav>
+
+  <main class="content">
+    <!-- HOME -->
+<section id="home">
+  <div class="hero" style="
+      background: linear-gradient(135deg, #fff6ed, #fff1e3);
+      padding: 60px 30px;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+      text-align: center;
+      font-family: 'Segoe UI', Arial, sans-serif;
+  ">
+    <h2 style="font-size:2.5rem; margin-bottom: 24px; color:#ff914d;">🐾 Welcome to MeowWoof PetLife</h2>
+    <p id="pet-intro" style="font-size:1.3rem; color:#5a4635; max-width:720px; margin: 0 auto 20px; line-height:1.6;">
+      Imagine a place where tails wag freely, paws dance in delight, and every purr tells a story.  
+      <strong>MeowWoof PetLife</strong> is that place—your haven to celebrate, nurture, and understand your beloved <span id="pet-label">pets</span>.
+    </p>
+    <p style="font-size:1.15rem; color:#7a5a3e; max-width:680px; margin: 0 auto 20px; line-height:1.5;">
+      Here, you’ll find guidance on keeping them healthy, happy, and full of life.  
+      From heartwarming adoption tales to tips on care and training, every word is crafted to bring you closer to your furry companion.
+    </p>
+    <p style="margin-top:20px; font-size:1.05rem; color:#a37a4b; font-style:italic; max-width:700px; margin-left:auto; margin-right:auto;">
+      Step inside, feel the warmth, and let the magic of pets brighten your day. Every meow, every bark, every wag—welcome to the family. 🐶🐱
+    </p>
+  </div>
+</section>
+
+
+
+           <!-- GALLERY -->
+    <section id="gallery">
+      <h2>🐾 Pet Gallery</h2>
+      <div class="grid cols-3">
+
+       <!-- DOG ONLY (10 pics) -->
+       <div class="card dog-only"><h3>Bella</h3><p>Playful and loyal.</p><img src="assets/DOG IMG/Bella.jpg" alt="Dog 1"></div>
+        <div class="card dog-only"><h3>Luna</h3><p>Loves fetch.</p><img src="assets/DOG IMG/Luna.jpg" alt="Dog 2"></div>
+        <div class="card dog-only"><h3>Coco</h3><p>Energetic and fun.</p><img src="assets/DOG IMG/Coco.jpg" alt="Dog 3"></div>
+        <div class="card dog-only"><h3>buds</h3><p>Best buddy ever.</p><img src="assets/DOG IMG/Buds.jpg" alt="Dog 4"></div>
+        <div class="card dog-only"><h3>Rocky</h3><p>Loves long walks.</p><img src="assets/DOG IMG/Rocky.jpg" alt="Dog 5"></div>
+        <div class="card dog-only"><h3>Daisy</h3><p>Always smiling.</p><img src="assets/DOG IMG/Daisy.jpg" alt="Dog 6"></div>
+        <div class="card dog-only"><h3>Milo</h3><p>Super cuddly.</p><img src="assets/DOG IMG/Milo.jpg" alt="Dog 7"></div>
+        <div class="card dog-only"><h3>charlie</h3><p>Cheerful pup.</p><img src="assets/DOG IMG/Charlie.jpg" alt="Dog 8"></div>
+        <div class="card dog-only"><h3>Max</h3><p>Loves kids.</p><img src="assets/DOG IMG/Max.jpg" alt="Dog 9"></div>
+        <div class="card dog-only"><h3>Bailey</h3><p>Forever loyal.</p><img src="assets/DOG IMG/Bailey.jpg" alt="Dog 10"></div>
+
+        <!-- CAT ONLY (10 pics) -->
+        <div class="card cat-only"><h3>Pip</h3><p>Explorer kitty.</p><img src="assets/CAT IMG/Pip.jpg" alt="Cat 1"></div>
+        <div class="card cat-only"><h3>Kity</h3><p>Loves cozy naps.</p><img src="assets/CAT IMG/Kitty.jpg" alt="Cat 2"></div>
+        <div class="card cat-only"><h3>Molly</h3><p>Box enthusiast.</p><img src="assets/CAT IMG/Molly.jpg" alt="Cat 3"></div>
+        <div class="card cat-only"><h3>Kit</h3><p>Window watcher.</p><img src="assets/CAT IMG/Kit.jpg" alt="Cat 4"></div>
+        <div class="card cat-only"><h3>Sunny</h3><p>Sunlight lover.</p><img src="assets/CAT IMG/Sunny.jpg" alt="Cat 5"></div>
+        <div class="card cat-only"><h3>Mochi</h3><p>Lazy but cute.</p><img src="assets/CAT IMG/Mochi.jpg" alt="Cat 6"></div>
+        <div class="card cat-only"><h3>Whiskers</h3><p>Forever curious.</p><img src="assets/CAT IMG/Whiskers.jpg" alt="Cat 7"></div>
+        <div class="card cat-only"><h3>NegNeg</h3><p>Purr machine.</p><img src="assets/CAT IMG/NegNeg.jpg" alt="Cat 8"></div>
+        <div class="card cat-only"><h3>Possy</h3><p>Very fluffy.</p><img src="assets/CAT IMG/Possy.jpg" alt="Cat 9"></div>
+        <div class="card cat-only"><h3>Nappy</h3><p>Elegant kitty.</p><img src="assets/CAT IMG/Nappy.jpg" alt="Cat 10"></div>
+
+      </div>
+      <p style="margin-top:10px;color:#5a4635">👉 Click a card to reveal its picture!</p>
+    </section>
+
+
+
+    <!-- CARE (paste this after your GALLERY section) -->
+<section id="care">
+  <h2>🛁 Care Guides</h2>
+  <div class="grid cols-3">
+    <!-- DOG ONLY (10 items) -->
+    <div class="card dog-only"><h3>Dog Grooming Basics</h3><p>Brush regularly to prevent mats.</p><img src="assets/dog care/groming dog.jpg" alt="Dog Grooming"></div>
+    <div class="card dog-only"><h3>Bathing Tips</h3><p>Use mild shampoo and warm water.</p><img src="assets/dog care/bathing.jpg" alt="Dog Bathing"></div>
+    <div class="card dog-only"><h3>Nail Care</h3><p>Trim nails carefully every few weeks.</p><img src="assets/dog care/nail care.jpg" alt="Dog Nails"></div>
+    <div class="card dog-only"><h3>Ear Cleaning</h3><p>Check and clean to prevent infections.</p><img src="assets/dog care/ear cleaning.jpg" alt="Dog Ears"></div>
+    <div class="card dog-only"><h3>Coat Care</h3><p>Use the right brush for coat type.</p><img src="assets/dog care/coat care.jpg" alt="Dog Coat"></div>
+    <div class="card dog-only"><h3>Tooth Care</h3><p>Introduce tooth brushing early.</p><img src="assets/dog care/tooth.jpg" alt="Dog Teeth"></div>
+    <div class="card dog-only"><h3>Paw Protection</h3><p>Check pads after walks; use balms if needed.</p><img src="assets/dog care/paw protect.jpg" alt="Dog Paws"></div>
+    <div class="card dog-only"><h3>Shedding Help</h3><p>Deshed tools help reduce loose hair.</p><img src="assets/dog care/shedding.jpg" alt="Dog Shedding"></div>
+    <div class="card dog-only"><h3>Gland Care</h3><p>Watch for scooting; ask vet about expression.</p><img src="assets/dog care/gland care.jpg" alt="Dog Glands"></div>
+    <div class="card dog-only"><h3>Seasonal Grooming</h3><p>Adjust grooming with weather changes.</p><img src="assets/dog care/seasonal.jpg" alt="Dog Seasonal Grooming"></div>
+
+    <!-- CAT ONLY (10 items) -->
+    <div class="card cat-only"><h3>Cat Brushing</h3><p>Short daily brushes for smooth fur.</p><img src="https://placekitten.com/400/250" alt="Cat Brushing"></div>
+    <div class="card cat-only"><h3>Litter Box Care</h3><p>Clean daily, scoop clumps regularly.</p><img src="https://placekitten.com/401/250" alt="Litter Box"></div>
+    <div class="card cat-only"><h3>Claw Trimming</h3><p>Trim gently or provide scratching posts.</p><img src="https://placekitten.com/402/250" alt="Claw Trimming"></div>
+    <div class="card cat-only"><h3>Bathing Cats</h3><p>Most cats self-clean; bathe only if needed.</p><img src="https://placekitten.com/403/250" alt="Bathing Cat"></div>
+    <div class="card cat-only"><h3>Furball Management</h3><p>Brush to reduce hairballs; consider diets that help.</p><img src="https://placekitten.com/404/250" alt="Furball"></div>
+    <div class="card cat-only"><h3>Ear Checks</h3><p>Look for debris or odor; consult vet if present.</p><img src="https://placekitten.com/405/250" alt="Cat Ears"></div>
+    <div class="card cat-only"><h3>Dental Tips</h3><p>Offer dental treats and brush if your cat accepts it.</p><img src="https://placekitten.com/406/250" alt="Cat Dental"></div>
+    <div class="card cat-only"><h3>Coat Health</h3><p>Nutrition affects shine — high-quality diets help.</p><img src="https://placekitten.com/407/250" alt="Cat Coat"></div>
+    <div class="card cat-only"><h3>Safe Toys</h3><p>Use toys that don't have small loose parts.</p><img src="https://placekitten.com/408/250" alt="Cat Toys"></div>
+    <div class="card cat-only"><h3>Calm Spaces</h3><p>Provide hiding spots for stress relief.</p><img src="https://placekitten.com/409/250" alt="Cat Calm"></div>
+  </div>
+  <p style="margin-top:10px;color:#5a4635">👉 Click a card to reveal its picture! (Only the cards for your selected pet are shown.)</p>
+</section>
+
+    <!-- HEALTH -->
+   <!-- HEALTH (paste after your FOOD section) -->
+<section id="health">
+  <h2>🩺 Health & Wellness</h2>
+  <div class="grid cols-3">
+    <!-- DOG ONLY (10 items) -->
+    <div class="card dog-only"><h3>Vaccinations</h3><p>Core vaccines protect your pup.</p><img src="https://place-puppy.com/410x260" alt="Dog Vaccines"></div>
+    <div class="card dog-only"><h3>Parasite Prevention</h3><p>Monthly flea & tick control.</p><img src="https://place-puppy.com/411x260" alt="Dog Parasite"></div>
+    <div class="card dog-only"><h3>Vet Checkups</h3><p>Annual visits catch issues early.</p><img src="https://place-puppy.com/412x260" alt="Dog Vet"></div>
+    <div class="card dog-only"><h3>Spay/Neuter</h3><p>Prevents health risks & overpopulation.</p><img src="https://place-puppy.com/413x260" alt="Dog Spay"></div>
+    <div class="card dog-only"><h3>Exercise Needs</h3><p>Daily activity keeps them healthy.</p><img src="https://place-puppy.com/414x260" alt="Dog Exercise"></div>
+    <div class="card dog-only"><h3>Joint Care</h3><p>Supplements help aging dogs.</p><img src="https://place-puppy.com/415x260" alt="Dog Joints"></div>
+    <div class="card dog-only"><h3>Skin Care</h3><p>Watch for allergies & irritations.</p><img src="https://place-puppy.com/416x260" alt="Dog Skin"></div>
+    <div class="card dog-only"><h3>Weight Control</h3><p>Prevent obesity with diet & exercise.</p><img src="https://place-puppy.com/417x260" alt="Dog Weight"></div>
+    <div class="card dog-only"><h3>Dental Health</h3><p>Brushing & chews reduce tartar.</p><img src="https://place-puppy.com/418x260" alt="Dog Dental"></div>
+    <div class="card dog-only"><h3>Emergency Care</h3><p>Know signs that need vet help.</p><img src="https://place-puppy.com/419x260" alt="Dog Emergency"></div>
+
+    <!-- CAT ONLY (10 items) -->
+    <div class="card cat-only"><h3>Vaccinations</h3><p>Protect against core feline diseases.</p><img src="https://placekitten.com/410/260" alt="Cat Vaccines"></div>
+    <div class="card cat-only"><h3>Parasite Prevention</h3><p>Indoor cats need flea & worm control too.</p><img src="https://placekitten.com/411/260" alt="Cat Parasite"></div>
+    <div class="card cat-only"><h3>Vet Visits</h3><p>Annual checkups maintain health.</p><img src="https://placekitten.com/412/260" alt="Cat Vet"></div>
+    <div class="card cat-only"><h3>Spay/Neuter</h3><p>Reduces risks of certain cancers.</p><img src="https://placekitten.com/413/260" alt="Cat Spay"></div>
+    <div class="card cat-only"><h3>Indoor Exercise</h3><p>Encourage play to prevent obesity.</p><img src="https://placekitten.com/414/260" alt="Cat Exercise"></div>
+    <div class="card cat-only"><h3>Joint Support</h3><p>Older cats may need supplements.</p><img src="https://placekitten.com/415/260" alt="Cat Joints"></div>
+    <div class="card cat-only"><h3>Skin & Coat</h3><p>Allergies may cause over-grooming.</p><img src="https://placekitten.com/416/260" alt="Cat Skin"></div>
+    <div class="card cat-only"><h3>Weight Tips</h3><p>Monitor portions to avoid obesity.</p><img src="https://placekitten.com/417/260" alt="Cat Weight"></div>
+    <div class="card cat-only"><h3>Dental Care</h3><p>Special diets & treats help oral health.</p><img src="https://placekitten.com/418/260" alt="Cat Dental"></div>
+    <div class="card cat-only"><h3>Signs of Illness</h3><p>Watch appetite, litter habits, activity.</p><img src="https://placekitten.com/419/260" alt="Cat Illness"></div>
+  </div>
+  <p style="margin-top:10px;color:#5a4635">👉 Click a card to reveal its picture! (Only the cards for your selected pet are shown.)</p>
+</section>
+
+
+    <!-- FOOD (paste after your CARE section) -->
+<section id="food">
+  <h2>🍖 Food & Nutrition</h2>
+  <div class="grid cols-3">
+    <!-- DOG ONLY (10 items) -->
+    <div class="card dog-only"><h3>Adult Kibble</h3><p>Balanced formula for adults.</p><img src="https://place-puppy.com/400x260" alt="Adult Kibble"></div>
+    <div class="card dog-only"><h3>Puppy Formula</h3><p>Nutrition for growing pups.</p><img src="https://place-puppy.com/401x260" alt="Puppy Food"></div>
+    <div class="card dog-only"><h3>Wet Food</h3><p>Hydrating and tasty meals.</p><img src="https://place-puppy.com/402x260" alt="Wet Food"></div>
+    <div class="card dog-only"><h3>Grain-Free</h3><p>Alternative for sensitive tummies.</p><img src="https://place-puppy.com/403x260" alt="Grain Free"></div>
+    <div class="card dog-only"><h3>High-Protein</h3><p>For active, working dogs.</p><img src="https://place-puppy.com/404x260" alt="High Protein"></div>
+    <div class="card dog-only"><h3>Senior Diet</h3><p>Lower calories, joint support.</p><img src="https://place-puppy.com/405x260" alt="Senior Diet"></div>
+    <div class="card dog-only"><h3>Dental Chews</h3><p>Helps reduce tartar build-up.</p><img src="https://place-puppy.com/406x260" alt="Dental Chews"></div>
+    <div class="card dog-only"><h3>Healthy Treats</h3><p>Low-calorie reward options.</p><img src="https://place-puppy.com/407x260" alt="Healthy Treats"></div>
+    <div class="card dog-only"><h3>Raw Options</h3><p>Pros & cons — consult vet.</p><img src="https://place-puppy.com/408x260" alt="Raw Diet"></div>
+    <div class="card dog-only"><h3>Hydration Tips</h3><p>Encourage regular water intake.</p><img src="https://place-puppy.com/409x260" alt="Hydration"></div>
+
+    <!-- CAT ONLY (10 items) -->
+    <div class="card cat-only"><h3>Kitten Formula</h3><p>Essential nutrients for growth.</p><img src="https://placekitten.com/400/260" alt="Kitten Food"></div>
+    <div class="card cat-only"><h3>Adult Cat Kibble</h3><p>Balanced for indoor cats.</p><img src="https://placekitten.com/401/260" alt="Cat Kibble"></div>
+    <div class="card cat-only"><h3>Wet Meals</h3><p>Good for hydration & palatability.</p><img src="https://placekitten.com/402/260" alt="Wet Meals"></div>
+    <div class="card cat-only"><h3>Hairball Diet</h3><p>Fiber to help reduce hairballs.</p><img src="https://placekitten.com/403/260" alt="Hairball Diet"></div>
+    <div class="card cat-only"><h3>Grain-Sensitive</h3><p>Alternatives for sensitive cats.</p><img src="https://placekitten.com/404/260" alt="Grain Sensitive"></div>
+    <div class="card cat-only"><h3>Senior Cat Food</h3><p>Joint & kidney-friendly options.</p><img src="https://placekitten.com/405/260" alt="Senior Cat"></div>
+    <div class="card cat-only"><h3>Treat Moderation</h3><p>Small treats, big impact on calories.</p><img src="https://placekitten.com/406/260" alt="Cat Treats"></div>
+    <div class="card cat-only"><h3>Wet vs Dry</h3><p>Benefits of mixing meal types.</p><img src="https://placekitten.com/407/260" alt="Wet vs Dry"></div>
+    <div class="card cat-only"><h3>Supplements</h3><p>When to consider added vitamins.</p><img src="https://placekitten.com/408/260" alt="Supplements"></div>
+    <div class="card cat-only"><h3>Safe Human Foods</h3><p>What you can (and can't) share.</p><img src="https://placekitten.com/409/260" alt="Human Foods"></p></div>
+  </div>
+  <p style="margin-top:10px;color:#5a4635">👉 Click a card to reveal its picture! (Only the cards for your selected pet are shown.)</p>
+</section>
+
+
+    <!-- ADOPTION -->
+<section id="adopt">
+  <h2>🏡 Find Your New Best Friend</h2>
+  <p>These loving pets are waiting for their forever homes. Click a card to reveal their picture!</p>
+  
+  <div class="grid cols-3">
+
+    <!-- ================= DOGS FOR ADOPTION (10) ================= -->
+    <div class="card dog-only">
+      <h3>Buster</h3>
+      <p>Age: 2 years<br>Loyal and playful Labrador mix.</p>
+      <img src="https://place-puppy.com/500x300" alt="Adopt Buster">
+    </div>
+    <div class="card dog-only">
+      <h3>Luna</h3>
+      <p>Age: 1 year<br>Sweet Husky pup who loves cuddles.</p>
+      <img src="https://place-puppy.com/501x300" alt="Adopt Luna">
+    </div>
+    <div class="card dog-only">
+      <h3>Max</h3>
+      <p>Age: 3 years<br>Energetic German Shepherd, great protector.</p>
+      <img src="https://place-puppy.com/502x300" alt="Adopt Max">
+    </div>
+    <div class="card dog-only">
+      <h3>Bella</h3>
+      <p>Age: 6 months<br>Adorable Beagle puppy full of joy.</p>
+      <img src="https://place-puppy.com/503x300" alt="Adopt Bella">
+    </div>
+    <div class="card dog-only">
+      <h3>Charlie</h3>
+      <p>Age: 4 years<br>Calm Golden Retriever, loves kids.</p>
+      <img src="https://place-puppy.com/504x300" alt="Adopt Charlie">
+    </div>
+    <div class="card dog-only">
+      <h3>Daisy</h3>
+      <p>Age: 2 years<br>Smart Border Collie, great for active families.</p>
+      <img src="https://place-puppy.com/505x300" alt="Adopt Daisy">
+    </div>
+    <div class="card dog-only">
+      <h3>Rocky</h3>
+      <p>Age: 5 years<br>Strong but gentle Rottweiler.</p>
+      <img src="https://place-puppy.com/506x300" alt="Adopt Rocky">
+    </div>
+    <div class="card dog-only">
+      <h3>Milo</h3>
+      <p>Age: 1.5 years<br>Happy-go-lucky Shih Tzu mix.</p>
+      <img src="https://place-puppy.com/507x300" alt="Adopt Milo">
+    </div>
+    <div class="card dog-only">
+      <h3>Zoey</h3>
+      <p>Age: 3 years<br>Graceful Greyhound, loves running.</p>
+      <img src="https://place-puppy.com/508x300" alt="Adopt Zoey">
+    </div>
+    <div class="card dog-only">
+      <h3>Toby</h3>
+      <p>Age: 8 months<br>Funny Pug pup with a big heart.</p>
+      <img src="https://place-puppy.com/509x300" alt="Adopt Toby">
+    </div>
+
+    <!-- ================= CATS FOR ADOPTION (10) ================= -->
+    <div class="card cat-only">
+      <h3>Lily</h3>
+      <p>Age: 1 year<br>Sassy but sweet Siamese cat.</p>
+      <img src="https://placekitten.com/400/300" alt="Adopt Lily">
+    </div>
+    <div class="card cat-only">
+      <h3>Oliver</h3>
+      <p>Age: 2 years<br>Curious tabby who loves to explore.</p>
+      <img src="https://placekitten.com/401/300" alt="Adopt Oliver">
+    </div>
+    <div class="card cat-only">
+      <h3>Cleo</h3>
+      <p>Age: 6 months<br>Playful kitten with big green eyes.</p>
+      <img src="https://placekitten.com/402/300" alt="Adopt Cleo">
+    </div>
+    <div class="card cat-only">
+      <h3>Simba</h3>
+      <p>Age: 3 years<br>Orange tabby, calm and affectionate.</p>
+      <img src="https://placekitten.com/403/300" alt="Adopt Simba">
+    </div>
+    <div class="card cat-only">
+      <h3>Nala</h3>
+      <p>Age: 2 years<br>Sweet calico, gentle and friendly.</p>
+      <img src="https://placekitten.com/404/300" alt="Adopt Nala">
+    </div>
+    <div class="card cat-only">
+      <h3>Leo</h3>
+      <p>Age: 4 years<br>Maine Coon mix, loves cuddles.</p>
+      <img src="https://placekitten.com/405/300" alt="Adopt Leo">
+    </div>
+    <div class="card cat-only">
+      <h3>Chloe</h3>
+      <p>Age: 5 years<br>Independent but loving black cat.</p>
+      <img src="https://placekitten.com/406/300" alt="Adopt Chloe">
+    </div>
+    <div class="card cat-only">
+      <h3>Mochi</h3>
+      <p>Age: 8 months<br>Energetic kitten who loves toys.</p>
+      <img src="https://placekitten.com/407/300" alt="Adopt Mochi">
+    </div>
+    <div class="card cat-only">
+      <h3>Whiskers</h3>
+      <p>Age: 2.5 years<br>Friendly tuxedo cat who purrs a lot.</p>
+      <img src="https://placekitten.com/408/300" alt="Adopt Whiskers">
+    </div>
+    <div class="card cat-only">
+      <h3>Daisy</h3>
+      <p>Age: 7 months<br>Tiny fluffball with a loud purr.</p>
+      <img src="https://placekitten.com/409/300" alt="Adopt Daisy">
+    </div>
+  </div>
+</section>
+
+    <!-- Adoption Form -->
+<div id="adoption-form" style="
+  background:#fffaf3;
+  padding:60px 80px;
+  border-radius:20px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.1);
+  width:1000%;
+  max-width:1200px;
+  margin:60px auto;
+">
+  <h2 style="color:#ff914d; font-size:2.2em; margin-bottom:10px; text-align:center;">
+    🐾 Adoption Form
+  </h2>
+  <p style="color:#5a4635; margin-bottom:40px; text-align:center; font-size:1.1em;">
+    Fill out this form to adopt your new furry friend!
+  </p>
+
+  <form style="
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(400px,1fr));
+    gap:25px;
+  ">
+    <div>
+      <label style="font-weight:600;">Full Name:</label>
+      <input type="text" placeholder="Enter your full name" style="width:100%; padding:12px; border-radius:10px; border:1px solid #d6b99e;">
+    </div>
+
+    <div>
+      <label style="font-weight:600;">Contact Number:</label>
+      <input type="tel" placeholder="09XXXXXXXXX" style="width:100%; padding:12px; border-radius:10px; border:1px solid #d6b99e;">
+    </div>
+
+    <div>
+      <label style="font-weight:600;">Email Address:</label>
+      <input type="email" placeholder="youremail@example.com" style="width:100%; padding:12px; border-radius:10px; border:1px solid #d6b99e;">
+    </div>
+
+    <div>
+      <label style="font-weight:600;">Preferred Pet:</label>
+      <select style="width:100%; padding:12px; border-radius:10px; border:1px solid #d6b99e;">
+        <option>Dog</option>
+        <option>Cat</option>
+      </select>
+    </div>
+
+    <div style="grid-column:1/-1;">
+      <label style="font-weight:600;">Pet Name (if specific):</label>
+      <input type="text" placeholder="Enter the pet’s name (optional)" style="width:100%; padding:12px; border-radius:10px; border:1px solid #d6b99e;">
+    </div>
+
+    <div style="grid-column:1/-1;">
+      <label style="font-weight:600;">Reason for Adopting:</label>
+      <textarea rows="4" placeholder="Why do you want to adopt this pet?" style="width:100%; padding:12px; border-radius:10px; border:1px solid #d6b99e;"></textarea>
+    </div>
+
+    <div style="grid-column:1/-1; text-align:center;">
+      <button type="submit" style="
+        background:#ff914d; color:white; font-weight:600;
+        padding:14px 30px; border:none; border-radius:12px;
+        font-size:1.1em; cursor:pointer; transition:background 0.3s;
+      " onmouseover="this.style.background='#e6762d'" onmouseout="this.style.background='#ff914d'">
+        Submit Adoption Form
+      </button>
+    </div>
+  </form>
+</div>
+
+
+    <!-- TRAINING -->
+     <section id="training">
+  <h2>🎉 Pet traning & Activities</h2>
+  <div class="grid cols-3">
+    <div class="card dog-only"><h3>Sit Command</h3><p>Basic obedience starts here.</p><img src="https://place-puppy.com/420x260" alt="Dog Sit"></div>
+    <div class="card dog-only"><h3>Stay Command</h3><p>Teaches patience & focus.</p><img src="https://place-puppy.com/421x260" alt="Dog Stay"></div>
+    <div class="card dog-only"><h3>Come Command</h3><p>Important for safety outdoors.</p><img src="https://place-puppy.com/422x260" alt="Dog Come"></div>
+    <div class="card dog-only"><h3>Leash Training</h3><p>Walk calmly without pulling.</p><img src="https://place-puppy.com/423x260" alt="Dog Leash"></div>
+    <div class="card dog-only"><h3>House Training</h3><p>Teach proper potty habits.</p><img src="https://place-puppy.com/424x260" alt="Dog House Training"></div>
+    <div class="card dog-only"><h3>Crate Training</h3><p>Helps with travel & security.</p><img src="https://place-puppy.com/425x260" alt="Dog Crate"></div>
+    <div class="card dog-only"><h3>No Biting</h3><p>Discourage playful nipping.</p><img src="https://place-puppy.com/426x260" alt="Dog No Bite"></div>
+    <div class="card dog-only"><h3>Socialization</h3><p>Introduce to other dogs & people.</p><img src="https://place-puppy.com/427x260" alt="Dog Social"></div>
+    <div class="card dog-only"><h3>Advanced Tricks</h3><p>Roll over, shake paw, etc.</p><img src="https://place-puppy.com/428x260" alt="Dog Tricks"></div>
+    <div class="card dog-only"><h3>Positive Reinforcement</h3><p>Reward-based methods work best.</p><img src="https://place-puppy.com/429x260" alt="Dog Reward"></div>
+
+    <!-- CAT ONLY (10 items) -->
+    <div class="card cat-only"><h3>Litter Training</h3><p>Show kittens where to go.</p><img src="https://placekitten.com/420/260" alt="Cat Litter"></div>
+    <div class="card cat-only"><h3>Scratching Posts</h3><p>Encourage scratching in the right spot.</p><img src="https://placekitten.com/421/260" alt="Cat Scratching"></div>
+    <div class="card cat-only"><h3>Clicker Training</h3><p>Reward good behaviors with clicks.</p><img src="https://placekitten.com/422/260" alt="Cat Clicker"></div>
+    <div class="card cat-only"><h3>Come When Called</h3><p>Teach them to respond to name.</p><img src="https://placekitten.com/423/260" alt="Cat Come"></div>
+    <div class="card cat-only"><h3>Carrier Training</h3><p>Reduce stress when visiting the vet.</p><img src="https://placekitten.com/424/260" alt="Cat Carrier"></div>
+    <div class="card cat-only"><h3>Leash Training</h3><p>Some cats enjoy outdoor walks.</p><img src="https://placekitten.com/425/260" alt="Cat Leash"></div>
+    <div class="card cat-only"><h3>No Biting</h3><p>Discourage rough play.</p><img src="https://placekitten.com/426/260" alt="Cat Bite"></div>
+    <div class="card cat-only"><h3>Jump Control</h3><p>Train where climbing is allowed.</p><img src="https://placekitten.com/427/260" alt="Cat Jump"></div>
+    <div class="card cat-only"><h3>High Five</h3><p>Fun and easy cat trick!</p><img src="https://placekitten.com/428/260" alt="Cat High Five"></div>
+    <div class="card cat-only"><h3>Positive Reinforcement</h3><p>Treats & praise encourage learning.</p><img src="https://placekitten.com/429/260" alt="Cat Reward"></div>
+  </div>
+  <p style="margin-top:10px;color:#5a4635">👉 Click a card to reveal its picture! (Only the cards for your selected pet are shown.)</p>
+</section>
+
+    <!-- EVENTS -->
+<section id="events">
+  <h2>🎉 Pet Events & Activities</h2>
+  <div class="grid cols-3">
+
+    <!-- ================= DOG EVENTS (10) ================= -->
+    <div class="card dog-only">
+      <h3>Dog Adoption Fair</h3>
+      <p><strong>Date:</strong> Oct 15, 2025<br><strong>Place:</strong> City Park</p>
+      <img src="https://place-puppy.com/500x300" alt="Dog Adoption Event">
+    </div>
+
+    <div class="card dog-only">
+      <h3>Puppy Playdate</h3>
+      <p><strong>Date:</strong> Oct 22, 2025<br><strong>Place:</strong> Bark Avenue</p>
+      <img src="https://place-puppy.com/501x300" alt="Puppy Playdate">
+    </div>
+
+    <div class="card dog-only">
+      <h3>Agility Contest</h3>
+      <p><strong>Date:</strong> Nov 1, 2025<br><strong>Place:</strong> Pet Sports Arena</p>
+      <img src="https://place-puppy.com/502x300" alt="Dog Agility">
+    </div>
+
+    <div class="card dog-only">
+      <h3>Dog Costume Parade</h3>
+      <p><strong>Date:</strong> Nov 12, 2025<br><strong>Place:</strong> Downtown Plaza</p>
+      <img src="https://place-puppy.com/503x300" alt="Dog Parade">
+    </div>
+
+    <div class="card dog-only">
+      <h3>Charity Walk</h3>
+      <p><strong>Date:</strong> Nov 20, 2025<br><strong>Place:</strong> Riverside Trail</p>
+      <img src="https://place-puppy.com/504x300" alt="Dog Charity Walk">
+    </div>
+
+    <div class="card dog-only">
+      <h3>Dog Beach Day</h3>
+      <p><strong>Date:</strong> Dec 1, 2025<br><strong>Place:</strong> Sunny Shore</p>
+      <img src="https://place-puppy.com/505x300" alt="Dog Beach Day">
+    </div>
+
+    <div class="card dog-only">
+      <h3>Holiday Paws Party</h3>
+      <p><strong>Date:</strong> Dec 15, 2025<br><strong>Place:</strong> Dog Café</p>
+      <img src="https://place-puppy.com/506x300" alt="Holiday Dog Party">
+    </div>
+
+    <div class="card dog-only">
+      <h3>Obedience Training Demo</h3>
+      <p><strong>Date:</strong> Jan 10, 2026<br><strong>Place:</strong> Training Center</p>
+      <img src="https://place-puppy.com/507x300" alt="Dog Training Demo">
+    </div>
+
+    <div class="card dog-only">
+      <h3>Rescue Shelter Open House</h3>
+      <p><strong>Date:</strong> Jan 22, 2026<br><strong>Place:</strong> Rescue Haven</p>
+      <img src="https://place-puppy.com/508x300" alt="Dog Shelter Open House">
+    </div>
+
+    <div class="card dog-only">
+      <h3>Dog & Owner Fun Run</h3>
+      <p><strong>Date:</strong> Feb 5, 2026<br><strong>Place:</strong> City Stadium</p>
+      <img src="https://place-puppy.com/509x300" alt="Dog Fun Run">
+    </div>
+
+
+    <!-- ================= CAT EVENTS (10) ================= -->
+    <div class="card cat-only">
+      <h3>Cat Café Meetup</h3>
+      <p><strong>Date:</strong> Oct 10, 2025<br><strong>Place:</strong> Meow Café</p>
+      <img src="https://placekitten.com/500/300" alt="Cat Cafe">
+    </div>
+
+    <div class="card cat-only">
+      <h3>Kitten Adoption Day</h3>
+      <p><strong>Date:</strong> Oct 18, 2025<br><strong>Place:</strong> Animal Shelter</p>
+      <img src="https://placekitten.com/501/300" alt="Kitten Adoption">
+    </div>
+
+    <div class="card cat-only">
+      <h3>Cat Show</h3>
+      <p><strong>Date:</strong> Oct 29, 2025<br><strong>Place:</strong> Expo Center</p>
+      <img src="https://placekitten.com/502/300" alt="Cat Show">
+    </div>
+
+    <div class="card cat-only">
+      <h3>Cat Yoga</h3>
+      <p><strong>Date:</strong> Nov 8, 2025<br><strong>Place:</strong> Zen Studio</p>
+      <img src="https://placekitten.com/503/300" alt="Cat Yoga">
+    </div>
+
+    <div class="card cat-only">
+      <h3>Rescue Fundraiser</h3>
+      <p><strong>Date:</strong> Nov 18, 2025<br><strong>Place:</strong> Community Hall</p>
+      <img src="https://placekitten.com/504/300" alt="Cat Fundraiser">
+    </div>
+
+    <div class="card cat-only">
+      <h3>Cat Photography Contest</h3>
+      <p><strong>Date:</strong> Dec 2, 2025<br><strong>Place:</strong> Art Gallery</p>
+      <img src="https://placekitten.com/505/300" alt="Cat Photography">
+    </div>
+
+    <div class="card cat-only">
+      <h3>Holiday Cat Party</h3>
+      <p><strong>Date:</strong> Dec 20, 2025<br><strong>Place:</strong> Cat Lounge</p>
+      <img src="https://placekitten.com/506/300" alt="Holiday Cat Party">
+    </div>
+
+    <div class="card cat-only">
+      <h3>Cat Agility Demo</h3>
+      <p><strong>Date:</strong> Jan 14, 2026<br><strong>Place:</strong> Training Arena</p>
+      <img src="https://placekitten.com/507/300" alt="Cat Agility">
+    </div>
+
+    <div class="card cat-only">
+      <h3>Shelter Open House</h3>
+      <p><strong>Date:</strong> Jan 25, 2026<br><strong>Place:</strong> Cat Haven</p>
+      <img src="https://placekitten.com/508/300" alt="Cat Shelter">
+    </div>
+
+    <div class="card cat-only">
+      <h3>Cat & Owner Fitness Class</h3>
+      <p><strong>Date:</strong> Feb 7, 2026<br><strong>Place:</strong> Fitness Studio</p>
+      <img src="https://placekitten.com/509/300" alt="Cat Fitness Class">
+    </div>
+
+  </div>
+  <p style="margin-top:10px;color:#5a4635">👉 Click a card to expand and see the event photo!</p>
+</section>
+
+
+    <!-- FEEDBACK -->
+<section id="feedback" style="padding:50px 24px; max-width:800px; margin:0 auto; background:#fff4e6; border-radius:16px; box-shadow:0 8px 20px rgba(0,0,0,0.08);">
+  <h2 style="text-align:center; font-size:2rem; color:#ff914d; margin-bottom:24px;">We’d Love to Hear From You!</h2>
+  <p style="text-align:center; font-size:1.1rem; color:#5a4635; margin-bottom:32px; line-height:1.5;">
+    Share your thoughts, suggestions, or heartwarming stories about your pets. Your feedback helps us make MeowWoof PetLife even better for furry friends everywhere!
+  </p>
+  <form id="feedback-form" style="display:flex; flex-direction:column; gap:16px;">
+    <input type="text" placeholder="Your Name *" required style="padding:12px 14px; border-radius:8px; border:1px solid #ccc; font-size:1rem;">
+    <input type="email" placeholder="Your Email *" required style="padding:12px 14px; border-radius:8px; border:1px solid #ccc; font-size:1rem;">
+    <textarea rows="5" placeholder="Your Message *" required style="padding:12px 14px; border-radius:8px; border:1px solid #ccc; font-size:1rem; resize:none;"></textarea>
+    <button type="submit" style="padding:14px 20px; border:none; border-radius:10px; background:#ff914d; color:white; font-weight:600; font-size:1rem; cursor:pointer; transition:background 0.3s;">
+      Send Message
+    </button>
+  </form>
+</section>
+
+<!-- Fun Submitted Message (Centered) -->
+<div id="submit-message" style="
+    position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
+    background:#ff914d; color:white; padding:14px 24px; border-radius:12px;
+    font-weight:600; font-size:1rem; display:flex; align-items:center; gap:10px;
+    box-shadow:0 6px 15px rgba(0,0,0,0.2); opacity:0; transition:opacity 0.5s ease, transform 0.5s ease;
+  ">
+  <span style="font-size:1.5rem;">🐾</span> Submitted, thank you!
+</div>
+
+<script>
+  const feedbackForm = document.getElementById('feedback-form');
+  const submitMessage = document.getElementById('submit-message');
+
+  feedbackForm.addEventListener('submit', function(e){
+    e.preventDefault(); // Prevent actual form submission
+
+    // Show the message with a scale-up effect
+    submitMessage.style.opacity = '1';
+    submitMessage.style.transform = 'translate(-50%, -50%) scale(1.1)';
+
+    // After 0.5s, shrink slightly for a playful effect
+    setTimeout(() => {
+      submitMessage.style.transform = 'translate(-50%, -50%) scale(1)';
+    }, 500);
+
+    // Hide after 2.5 seconds
+    setTimeout(() => {
+      submitMessage.style.opacity = '0';
+      submitMessage.style.transform = 'translate(-50%, -50%) scale(0.9)';
+    }, 2500);
+
+    // Reset form fields
+    feedbackForm.reset();
+  });
+</script>
+
+    <script>
+  const loginForm = document.getElementById('login-form');
+  const loginScreen = document.getElementById('login-screen');
+  const introScreen = document.getElementById('intro-screen');
+  const loginError = document.getElementById('login-error');
+
+  loginForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value.trim();
+
+    if(user === "" || pass === ""){
+      loginError.style.display = "block";
+      return;
+    }
+
+    // Optional: you can set specific login credentials
+    // if(user === "admin" && pass === "1234") { ... }
+
+    loginError.style.display = "none";
+    loginScreen.style.display = "none";  // hide login
+    introScreen.style.display = "flex";  // show intro
+  });
+
+  // hide intro by default
+  introScreen.style.display = "none";
+</script>
+
+  <!-- PAW LOADER -->
+  <div class="paw-loader" id="paw-loader"></div>
+
+<script>
+  const intro = document.getElementById('intro-screen');
+  const chooseDog = document.getElementById('choose-dog');
+  const chooseCat = document.getElementById('choose-cat');
+  const nav = document.querySelector('.nav-bar');
+  const backBtn = document.getElementById('back-btn');
+  const sections = document.querySelectorAll('main section');
+  const petLabel = document.getElementById('pet-label');
+  const petIntro = document.getElementById('pet-intro');
+  const loader = document.getElementById('paw-loader');
+  let chosenPet = "";
+
+  function showSection(id){
+    showLoader();
+    setTimeout(()=>{
+      sections.forEach(s=>{ s.classList.remove('active'); s.style.display='none'; });
+      const sec = document.getElementById(id);
+      if(sec){ sec.style.display='block'; setTimeout(()=>sec.classList.add('active'),20); }
+      window.scrollTo({top:0,behavior:'smooth'}); hideLoader();
+    },800);
+  }
+
+  function selectPet(type){
+    chosenPet = type;
+    intro.style.display = 'none'; nav.style.display = 'flex';
+    document.body.classList.remove('pet-dog','pet-cat');
+    document.body.classList.add(type==='dog'?'pet-dog':'pet-cat');
+    if(type==='dog'){
+      petLabel.textContent = 'dogs';
+      petIntro.textContent = "Welcome dog lover! Explore tips, health, training and adoption for your furry buddy.";
+    } else {
+      petLabel.textContent = 'cats';
+      petIntro.textContent = "Welcome cat lover! Discover guides, nutrition, and adoption stories for your feline friend.";
+    }
+    showSection('home');
+  }
+
+  chooseDog.addEventListener('click',()=>selectPet('dog'));
+  chooseCat.addEventListener('click',()=>selectPet('cat'));
+  backBtn.addEventListener('click',backToChoice);
+
+  nav.addEventListener('click',(e)=>{
+    const a = e.target.closest('a[data-target]');
+    if(a){ e.preventDefault(); showSection(a.dataset.target); }
+  });
+
+  function backToChoice(){
+    chosenPet=""; nav.style.display='none'; intro.style.display='flex';
+    document.body.classList.remove('pet-dog','pet-cat');
+    sections.forEach(s=> s.classList.remove('active'));
+  }
+
+  // toggle open card images
+  document.addEventListener('click',(e)=>{
+    if(e.target.closest('.nav-bar')) return;
+    const card = e.target.closest('.card');
+    if(card) card.classList.toggle('open');
+  });
+
+  // LOADER PAW RANDOMIZATION + PET SPECIFIC
+  function showLoader(){
+    loader.innerHTML="";
+    const pawImg = (chosenPet==="dog")
+      ? "https://cdn-icons-png.flaticon.com/512/616/616408.png"
+      : "https://cdn-icons-png.flaticon.com/512/616/616430.png";
+    for(let i=0;i<4;i++){
+      const paw=document.createElement('div');
+      paw.className='paw';
+      paw.style.backgroundImage = `url(${pawImg})`;
+      paw.style.marginLeft = (Math.random()>0.5?"-30px":"30px");
+      paw.style.animationDelay = (i*0.2)+"s";
+      loader.appendChild(paw);
+    }
+    loader.classList.add('active');
+  }
+  function hideLoader(){ setTimeout(()=> loader.classList.remove('active'),500); }
+</script>
+</body>
+</html>
+
+
+="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>MeowWoof - PetLife</title>
 <style>
@@ -862,6 +1728,7 @@
 </script>
 </body>
 </html>
+
 
 
 
