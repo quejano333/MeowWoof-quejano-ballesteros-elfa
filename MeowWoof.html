@@ -10,35 +10,12 @@
 body, html { font-family:'Poppins',sans-serif; width:100%; height:100%; background:#fdf6f0; transition:0.3s; scroll-behavior: smooth; }
 button { cursor:pointer; border:none; outline:none; }
 
-/* AUTH */
-#auth-page { position:fixed; inset:0; display:flex; justify-content:center; align-items:center; background: linear-gradient(135deg, #ffd1dc, #ffe8d6); z-index:9999; }
-.auth-box { background: rgba(255,255,255,0.95); border-radius:20px; padding:2rem; width:350px; box-shadow:0 15px 35px rgba(0,0,0,0.2); text-align:center; }
-.auth-box h2 { font-weight:600; margin-bottom:1rem; color:#ff6b81; }
-.auth-box input, .auth-box textarea { width:100%; padding:0.8rem; margin:0.5rem 0; border-radius:10px; border:1px solid #ddd; font-size:1rem; }
-.auth-box button { width:100%; padding:0.8rem; margin-top:1rem; border-radius:30px; background:#ff6b81; color:white; font-weight:600; font-size:1rem; transition:0.3s; }
-.auth-box button:hover { background:#ff4d6d; }
-.auth-box p { font-size:0.9rem; margin-top:1rem; color:#555; }
-.auth-box a { color:#ff6b81; cursor:pointer; font-weight:600; }
-
 /* MAIN WEBSITE */
-#main-website { display:none; }
 nav { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-bottom-left-radius:20px; border-bottom-right-radius:20px; position: sticky; top:0; z-index:100; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
 nav .logo { font-size:1.7rem; font-weight:600; color:#ff6b81; }
 nav .nav-links { display:flex; align-items:center; gap:1rem; }
-nav .nav-links a,
-nav .nav-links button {
-  font-weight: 500;
-  color: #333;
-  background: none;
-  padding: 0.4rem 0.6rem;
-  border-bottom: 2px solid transparent;
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-nav .nav-links a:hover,
-nav .nav-links button:hover { color: #ff6b81; border-bottom: 2px solid #ff6b81; }
-nav .user-info { display:flex; align-items:center; gap:0.8rem; font-weight:500; color:#333; }
+nav .nav-links a { font-weight: 500; color: #333; background: none; padding: 0.4rem 0.6rem; border-bottom: 2px solid transparent; height: 100%; display: flex; align-items: center; }
+nav .nav-links a:hover { color: #ff6b81; border-bottom: 2px solid #ff6b81; }
 
 .hero { background: url('https://images.unsplash.com/photo-1592194996308-7b43878e84a6') center/cover no-repeat; height:80vh; display:flex; justify-content:center; align-items:center; text-align:center; position:relative; color:white; }
 .hero::after { content:''; position:absolute; inset:0; background:rgba(0,0,0,0.4); }
@@ -69,94 +46,58 @@ nav .user-info { display:flex; align-items:center; gap:0.8rem; font-weight:500; 
 .pet-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1rem; padding:2rem; }
 
 /* MODALS */
-#adopt-modal, #feedback-modal, #donate-modal {
+#adopt-modal {
   display:none; position:fixed; inset:0; background: rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;
 }
-.modal-box { background: rgba(255,255,255,0.9); backdrop-filter: blur(15px); padding:2rem; border-radius:25px; width:380px; max-width:90%; position:relative; box-shadow:0 15px 35px rgba(0,0,0,0.2); text-align:center; animation: pop 0.3s ease-in-out; }
+.modal-box { background: rgba(255,255,255,0.9); backdrop-filter: blur(15px); padding:2rem; border-radius:25px; width:380px; max-width:90%; position:relative; box-shadow:0 15px 35px rgba(0,0,0,0.2); text-align:center; animation: pop 0.3s ease-in-out; max-height:80vh; overflow-y:auto; }
 @keyframes pop { 0% { transform: scale(0.7); opacity:0; } 100% { transform: scale(1); opacity:1; } }
 .modal-box h2 { font-size:1.8rem; color:#ff6b81; margin-bottom:0.5rem; }
 .modal-box p { font-size:0.9rem; color:#555; margin-bottom:1rem; }
-.modal-box input, .modal-box textarea { width:100%; padding:0.8rem; margin:0.6rem 0; border-radius:15px; border:1px solid #ddd; font-size:1rem; outline:none; transition:0.3s; box-shadow:0 4px 6px rgba(0,0,0,0.1); background:white; }
-.modal-box input:focus, .modal-box textarea:focus { border-color:#ff6b81; box-shadow:0 4px 15px rgba(255,107,129,0.3); }
+.modal-box input, .modal-box textarea, .modal-box select { width:100%; padding:0.8rem; margin:0.6rem 0; border-radius:15px; border:1px solid #ddd; font-size:1rem; outline:none; transition:0.3s; box-shadow:0 4px 6px rgba(0,0,0,0.1); background:white; }
+.modal-box input:focus, .modal-box textarea:focus, .modal-box select:focus { border-color:#ff6b81; box-shadow:0 4px 15px rgba(255,107,129,0.3); }
 .modal-box textarea { resize:none; min-height:80px; }
 .modal-box button { width:100%; padding:0.9rem; border-radius:30px; background:#ff6b81; color:white; font-weight:600; margin-top:1rem; font-size:1rem; transition:0.3s; }
 .modal-box button:hover { background:#ff4d6d; }
 .close-btn { position:absolute; top:12px; right:15px; font-size:1.2rem; cursor:pointer; color:#ff6b81; }
 .close-btn:hover { color:#ff0044; }
 
-/* DONATE SECTION */
-#donate { padding:2rem 1rem; text-align:center; background:#ffe8d6; margin-top:2rem; border-radius:20px; }
-#donate button { padding:0.8rem 1.5rem; border-radius:30px; background:#ff6b81; color:white; font-weight:600; font-size:1rem; margin-top:1rem; transition:0.3s; }
-#donate button:hover { background:#ff4d6d; }
+body.modal-open {
+  overflow: hidden; /* para hindi mag-scroll ang background */
+}
 
 @media(max-width:600px){ .hero-content h1{font-size:2rem;} .hero-content p{font-size:1rem;} }
 </style>
 </head>
 <body>
 
-<!-- AUTH -->
-<div id="auth-page">
-  <div class="auth-box" id="login-box">
-    <h2>Log In</h2>
-    <input type="email" id="loginEmail" placeholder="Email">
-    <input type="password" id="loginPassword" placeholder="Password">
-    <button onclick="login()">Log In</button>
-    <p>Don't have an account? <a onclick="showSignup()">Sign Up</a></p>
-  </div>
-  <div class="auth-box" id="signup-box" style="display:none;">
-    <h2>Sign Up</h2>
-    <input type="text" id="signupName" placeholder="Full Name">
-    <input type="email" id="signupEmail" placeholder="Email">
-    <input type="password" id="signupPassword" placeholder="Password">
-    <button onclick="signup()">Sign Up</button>
-    <p>Already have an account? <a onclick="showLogin()">Log In</a></p>
-  </div>
-</div>
-
 <!-- MAIN WEBSITE -->
-<div id="main-website">
-  <nav>
-    <div class="logo">Paw Finder</div>
-    <div class="nav-links">
-      <a href="#home">Home</a>
-      <a href="#listing">Pets</a>
-      <a href="#donate">Donate</a>
-      <button onclick="openFeedbackModal()">Feedback</button>
-    </div>
-    <div class="user-info">
-      <span id="user-name"></span>
-      <button onclick="logout()">Logout</button>
-    </div>
-  </nav>
-
-  <section class="hero" id="home">
-    <div class="hero-content">
-      <h1>Find Your Perfect Companion</h1>
-      <p>Browse cats, dogs, and puppies available for adoption.</p>
-      <button class="hero-btn" onclick="document.getElementById('listing').scrollIntoView({behavior:'smooth'})">Start Adopting</button>
-    </div>
-  </section>
-
-  <div class="filter-bar">
-    <button onclick="filterPets('cat')">🐱 Cats</button>
-    <button onclick="filterPets('dog')">🐶 Dogs</button>
-    <button onclick="filterPets('puppy')">🍼 Puppies / Kittens</button>
-    <button>🧓 Senior Pets</button>
-    <button>🐾 Special Needs</button>
+<nav>
+  <div class="logo">Paw Finder</div>
+  <div class="nav-links">
+    <a href="#home">Home</a>
+    <a href="#listing">Pets</a>
   </div>
+</nav>
 
-  <h2 style="text-align:center;">Featured Pets</h2>
-  <div class="carousel-container" id="featured-pets"></div>
+<section class="hero" id="home">
+  <div class="hero-content">
+    <h1>Find Your Perfect Companion</h1>
+    <p>Browse cats and dogs available for adoption.</p>
+    <button class="hero-btn" onclick="document.getElementById('listing').scrollIntoView({behavior:'smooth'})">Start Adopting</button>
+  </div>
+</section>
 
-  <h2 id="listing" style="text-align:center;">All Available Pets</h2>
-  <div class="pet-grid" id="pet-grid"></div>
-
-  <section id="donate">
-    <h2>Support Our Shelters</h2>
-    <p>Help rescued pets find their forever home.</p>
-    <button>Donate Now</button>
-  </section>
+<div class="filter-bar">
+  <button onclick="filterPets('cat')">🐱 Cats</button>
+  <button onclick="filterPets('dog')">🐶 Dogs</button>
+  <button onclick="filterPets('puppy')">🍼 Puppies / Kittens</button>
 </div>
+
+<h2 style="text-align:center;">Featured Pets</h2>
+<div class="carousel-container" id="featured-pets"></div>
+
+<h2 id="listing" style="text-align:center;">All Available Pets</h2>
+<div class="pet-grid" id="pet-grid"></div>
 
 <!-- ADOPTION MODAL -->
 <div id="adopt-modal">
@@ -164,151 +105,117 @@ nav .user-info { display:flex; align-items:center; gap:0.8rem; font-weight:500; 
     <span class="close-btn" onclick="closeAdoptModal()">✖</span>
     <h2>Adoption Form</h2>
     <p>Fill out your details to adopt this pet.</p>
-    <input type="text" id="adoptName" placeholder="Full Name">
-    <input type="email" id="adoptEmail" placeholder="Email">
-    <input type="text" id="adoptPhone" placeholder="Phone Number">
+    <input type="text" id="adoptFullName" placeholder="Full Name" required>
+    <input type="email" id="adoptEmail" placeholder="Email" required>
+    <input type="text" id="adoptPhone" placeholder="Phone Number" required>
+    <input type="text" id="adoptAddress" placeholder="Address" required>
+    <input type="number" id="adoptHousehold" placeholder="Number of Household Members" required>
+    <select id="adoptHomeType" required>
+      <option value="">Select Home Type</option>
+      <option value="House">House</option>
+      <option value="Apartment">Apartment</option>
+      <option value="Condo">Condo</option>
+      <option value="Other">Other</option>
+    </select>
+    <select id="adoptPetType" required>
+      <option value="">Select Pet Type</option>
+      <option value="Dog">Dog</option>
+      <option value="Cat">Cat</option>
+    </select>
+    <input type="date" id="adoptDate" required>
     <textarea id="adoptMessage" placeholder="Message (optional)"></textarea>
     <button onclick="submitAdoption()">Submit Adoption</button>
   </div>
 </div>
 
-<!-- DONATION MODAL -->
-<div id="donate-modal">
-  <div class="modal-box">
-    <span class="close-btn" onclick="closeDonateModal()">✖</span>
-    <h2 style="color:#ff6b81; margin-bottom:1rem;">Donate</h2>
-    <input type="number" id="donateAmount" placeholder="Enter Amount">
-    <input type="text" id="donateName" placeholder="Your Name">
-    <button onclick="submitDonation()">Donate Now</button>
-  </div>
-</div>
-
-<!-- FEEDBACK MODAL -->
-<div id="feedback-modal">
-  <div class="modal-box">
-    <span class="close-btn" onclick="closeFeedbackModal()">✖</span>
-    <h2>Feedback Form</h2>
-    <p>We’d love to hear your thoughts!</p>
-    <input type="text" id="feedbackName" placeholder="Full Name">
-    <input type="email" id="feedbackEmail" placeholder="Email">
-    <textarea id="feedbackMessage" placeholder="Your feedback..."></textarea>
-    <button onclick="submitFeedback()">Submit Feedback</button>
-  </div>
-</div>
-
 <script>
-  // AUTH
-  function showSignup(){ document.getElementById('login-box').style.display='none'; document.getElementById('signup-box').style.display='block'; }
-  function showLogin(){ document.getElementById('signup-box').style.display='none'; document.getElementById('login-box').style.display='block'; }
-  function signup(){ 
-    const name=document.getElementById('signupName').value;
-    const email=document.getElementById('signupEmail').value;
-    const pass=document.getElementById('signupPassword').value;
-    if(name && email && pass){ 
-      localStorage.setItem('pawfinderUser', JSON.stringify({name:name, email:email})); 
-      openWebsite(); 
-    } else { alert('Fill all fields'); } 
-  }
-  function login(){ 
-    const email=document.getElementById('loginEmail').value;
-    const pass=document.getElementById('loginPassword').value;
-    const storedUser = JSON.parse(localStorage.getItem('pawfinderUser'));
-    if(email && pass){ 
-      if(storedUser && email === storedUser.email){ openWebsite(); } 
-      else{ alert('User not found. Sign up first.'); } 
-    } else { alert('Fill all fields'); } 
-  }
-  function openWebsite(){ 
-    const user = JSON.parse(localStorage.getItem('pawfinderUser'));
-    document.getElementById('auth-page').style.display='none';
-    document.getElementById('main-website').style.display='block';
-    document.getElementById('user-name').innerText = user.name; 
-    loadPets();
-  }
-  function logout(){ localStorage.removeItem('pawfinderUser'); location.reload(); }
-  function toggleHeart(el){ el.classList.toggle('favorited'); }
-  window.onload = ()=>{ if(localStorage.getItem('pawfinderUser')) openWebsite(); }
-
-  // PETS
-  let currentPetCard = null;
-  async function loadPets(){
-    const featuredContainer = document.getElementById('featured-pets');
-    const gridContainer = document.getElementById('pet-grid');
-    const catRes = await fetch('https://api.thecatapi.com/v1/images/search?limit=4');
-    const catData = await catRes.json();
-    const dogRes = await fetch('https://api.thedogapi.com/v1/images/search?limit=4');
-    const dogData = await dogRes.json();
-    const allPets = [...catData.map(c=>({url:c.url, type:'Cat', id:c.id})), ...dogData.map(d=>({url:d.url, type:'Dog', id:d.id}))];
-    const adoptedPets = JSON.parse(localStorage.getItem('adoptedPets') || '{}');
-    featuredContainer.innerHTML = ''; gridContainer.innerHTML = '';
-    allPets.forEach(pet=>{
-      const createCard = (container,idPrefix)=>{
-        const card = document.createElement('div'); card.className='card'; card.id=idPrefix+pet.id;
-        let statusHTML = adoptedPets[pet.id] ? `<div class="pet-status">${adoptedPets[pet.id]}</div>` : '';
-        let adoptBtn = adoptedPets[pet.id] ? '' : `<button class="adopt-btn" onclick="openAdoptModal('${pet.id}',this)">adopt</button>`;
-        card.innerHTML=`<div class="heart" onclick="toggleHeart(this)">❤️</div>
-          ${statusHTML}
-          <img src="${pet.url}" alt="${pet.type}">
-          <h3>${pet.type}</h3>
-          <p>1 year • Male</p>
-          ${adoptBtn}`;
-        container.appendChild(card);
-      }
-      createCard(featuredContainer,'card-'); createCard(gridContainer,'cardgrid-');
-    });
-  }
-
-  function openAdoptModal(petId, btn){ currentPetCard = btn.parentElement; document.getElementById('adopt-modal').style.display='flex'; }
-  function closeAdoptModal(){ document.getElementById('adopt-modal').style.display='none'; }
-  function submitAdoption(){
-    const name=document.getElementById('adoptName').value; const email=document.getElementById('adoptEmail').value; const phone=document.getElementById('adoptPhone').value;
-    if(!name || !email || !phone){ alert('Fill all fields'); return; }
-    let adoptedPets = JSON.parse(localStorage.getItem('adoptedPets') || '{}'); adoptedPets[currentPetCard.id.replace('card-','')] = 'On Process';
-    localStorage.setItem('adoptedPets',JSON.stringify(adoptedPets));
-    const statusDiv=document.createElement('div'); statusDiv.className='pet-status'; statusDiv.innerText='On Process';
-    currentPetCard.appendChild(statusDiv); const btn=currentPetCard.querySelector('button'); if(btn) btn.remove();
-    closeAdoptModal(); alert('Adoption submitted! Status: On Process');
-  }
-
-  function filterPets(type){
-    const cards = document.querySelectorAll('#featured-pets .card, #pet-grid .card');
-    cards.forEach(card=>{
-      const petType = card.querySelector('h3').innerText.toLowerCase();
-      let filterType = type==='puppy' ? 'cat' : type;
-      if(!petType.includes(filterType)) card.style.display='none';
-      else card.style.display='block';
-    });
-  }
-
-  // MODALS
-  function openFeedbackModal(){ document.getElementById('feedback-modal').style.display='flex'; }
-  function closeFeedbackModal(){ document.getElementById('feedback-modal').style.display='none'; }
-  function submitFeedback(){
-    const name = document.getElementById('feedbackName').value;
-    const email = document.getElementById('feedbackEmail').value;
-    const message = document.getElementById('feedbackMessage').value;
-    if(!name || !email || !message){ alert('Fill all fields'); return; }
-    alert(`Thank you ${name} for your feedback!`);
-    document.getElementById('feedbackName').value='';
-    document.getElementById('feedbackEmail').value='';
-    document.getElementById('feedbackMessage').value='';
-    closeFeedbackModal();
-  }
-
-  // DONATE
-  document.querySelector('#donate button').addEventListener('click', ()=>{
-    document.getElementById('donate-modal').style.display='flex';
+// PETS
+let currentPetCard = null;
+async function loadPets(){
+  const featuredContainer = document.getElementById('featured-pets');
+  const gridContainer = document.getElementById('pet-grid');
+  const catRes = await fetch('https://api.thecatapi.com/v1/images/search?limit=4');
+  const catData = await catRes.json();
+  const dogRes = await fetch('https://api.thedogapi.com/v1/images/search?limit=4');
+  const dogData = await dogRes.json();
+  const allPets = [...catData.map(c=>({url:c.url, type:'Cat', id:c.id})), ...dogData.map(d=>({url:d.url, type:'Dog', id:d.id}))];
+  const adoptedPets = JSON.parse(localStorage.getItem('adoptedPets') || '{}');
+  featuredContainer.innerHTML = ''; gridContainer.innerHTML = '';
+  allPets.forEach(pet=>{
+    const createCard = (container,idPrefix)=>{
+      const card = document.createElement('div'); card.className='card'; card.id=idPrefix+pet.id;
+      let statusHTML = adoptedPets[pet.id] ? `<div class="pet-status">${adoptedPets[pet.id].status}</div>` : '';
+      let adoptBtn = adoptedPets[pet.id] ? '' : `<button class="adopt-btn" onclick="openAdoptModal('${pet.id}',this)">adopt</button>`;
+      card.innerHTML=`<div class="heart" onclick="toggleHeart(this)">❤️</div>
+        ${statusHTML}
+        <img src="${pet.url}" alt="${pet.type}">
+        <h3>${pet.type}</h3>
+        <p>1 year • Male</p>
+        ${adoptBtn}`;
+      container.appendChild(card);
+    }
+    createCard(featuredContainer,'card-'); createCard(gridContainer,'cardgrid-');
   });
-  function closeDonateModal(){ document.getElementById('donate-modal').style.display='none'; }
-  function submitDonation(){
-    const amount=document.getElementById('donateAmount').value;
-    const name=document.getElementById('donateName').value;
-    if(!amount || !name){ alert('Please fill all fields'); return; }
-    alert(`Thank you ${name} for donating $${amount}!`);
-    document.getElementById('donateAmount').value='';
-    document.getElementById('donateName').value='';
-    closeDonateModal();
+}
+
+function openAdoptModal(petId, btn){
+  currentPetCard = btn.parentElement;
+  document.getElementById('adopt-modal').style.display='flex';
+  document.body.classList.add('modal-open'); 
+}
+function closeAdoptModal(){
+  document.getElementById('adopt-modal').style.display='none';
+  document.body.classList.remove('modal-open'); 
+}
+
+function submitAdoption(){
+  const fullName = document.getElementById('adoptFullName').value;
+  const email = document.getElementById('adoptEmail').value;
+  const phone = document.getElementById('adoptPhone').value;
+  const address = document.getElementById('adoptAddress').value;
+  const household = document.getElementById('adoptHousehold').value;
+  const homeType = document.getElementById('adoptHomeType').value;
+  const petType = document.getElementById('adoptPetType').value;
+  const date = document.getElementById('adoptDate').value;
+  const message = document.getElementById('adoptMessage').value;
+
+  if(!fullName || !email || !phone || !address || !household || !homeType || !petType || !date){
+    alert('Please fill all required fields.');
+    return;
   }
+
+  let adoptedPets = JSON.parse(localStorage.getItem('adoptedPets') || '{}');
+  adoptedPets[currentPetCard.id.replace('card-','')] = {
+    status: 'On Process',
+    fullName, email, phone, address, household, homeType, petType, date, message
+  };
+  localStorage.setItem('adoptedPets', JSON.stringify(adoptedPets));
+
+  const statusDiv=document.createElement('div'); 
+  statusDiv.className='pet-status'; 
+  statusDiv.innerText='On Process';
+  currentPetCard.appendChild(statusDiv); 
+  const btn=currentPetCard.querySelector('button'); 
+  if(btn) btn.remove();
+
+  closeAdoptModal();
+  alert('Adoption submitted! Status: On Process');
+}
+
+function filterPets(type){
+  const cards = document.querySelectorAll('#featured-pets .card, #pet-grid .card');
+  cards.forEach(card=>{
+    const petType = card.querySelector('h3').innerText.toLowerCase();
+    let filterType = type==='puppy' ? 'cat' : type;
+    if(!petType.includes(filterType)) card.style.display='none';
+    else card.style.display='block';
+  });
+}
+
+function toggleHeart(el){ el.classList.toggle('favorited'); }
+
+window.onload = ()=>{ loadPets(); }
 </script>
+
 </body>
 </html>
