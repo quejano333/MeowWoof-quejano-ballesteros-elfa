@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paw Finder - Cat & Dog Adoption</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- MAIN CONTENT -->
+    <div id="main-content" style="display:none;">
+        <!-- Navigation -->
+        <nav>
+            <div class="logo">Paw Finder</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#listing">Pets</a>
+                <button id="logoutBtn">Logout</button>
+
+                <!-- Notification Button -->
+                <div class="notification-wrapper">
+                    <button id="notifBtn">
+                        🔔
+                        <span id="notifCount">0</span>
+                    </button>
+                    <div id="notification-container"></div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1>Find Your Perfect Companion</h1>
+                <p>Browse cats and dogs available for adoption.</p>
+                <button class="hero-btn" id="startAdoptingBtn">Start Adopting</button>
+            </div>
+        </section>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <button id="filterCats">🐱 Cats</button>
+            <button id="filterDogs">🐶 Dogs</button>
+            <button id="filterPuppies">🍼 Puppies / Kittens</button>
+        </div>
+
+        <!-- Featured Pets -->
+        <h2 class="section-title">Featured Pets</h2>
+        <div class="carousel-container" id="featured-pets"></div>
+
+        <!-- All Pets -->
+        <h2 id="listing" class="section-title">All Available Pets</h2>
+        <div class="pet-grid" id="pet-grid"></div>
+    </div>
+
+    <!-- ADOPTION MODAL -->
+    <div id="adopt-modal">
+        <div class="modal-box">
+            <span class="close-btn" id="closeAdoptModalBtn">✖</span>
+            <h2>Adoption Form</h2>
+            <p>Fill out your details to adopt this pet.</p>
+            
+            <form id="adoptionForm">
+                <input type="text" id="adoptFullName" placeholder="Full Name" required>
+                <input type="email" id="adoptEmail" placeholder="Email" required>
+                <input type="text" id="adoptPhone" placeholder="Phone Number" required>
+                <input type="text" id="adoptAddress" placeholder="Address" required>
+                <input type="number" id="adoptHousehold" placeholder="Number of Household Members" required>
+                
+                <select id="adoptHomeType" required>
+                    <option value="">Select Home Type</option>
+                    <option value="House">House</option>
+                    <option value="Apartment">Apartment</option>
+                    <option value="Condo">Condo</option>
+                    <option value="Other">Other</option>
+                </select>
+                
+                <select id="adoptPetType" required>
+                    <option value="">Select Pet Type</option>
+                    <option value="Dog">Dog</option>
+                    <option value="Cat">Cat</option>
+                </select>
+                
+                <input type="date" id="adoptDate" required>
+                <textarea id="adoptMessage" placeholder="Message (optional)"></textarea>
+                
+                <button type="button" id="submitAdoptionBtn">Submit Adoption</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- AUTH MODAL -->
+    <div id="auth-modal">
+        <div class="modal-box">
+            <span class="close-btn" id="closeAuthModalBtn">✖</span>
+            
+            <!-- Register Section -->
+            <div id="register-section">
+                <h2>Register</h2>
+                
+                <div class="auth-form">
+                    <input type="email" id="registerEmail" placeholder="Email" required>
+                    <input type="password" id="registerPassword" placeholder="Password" required>
+                    <button id="registerBtn">Register</button>
+                </div>
+                
+                <p class="auth-switch">
+                    Already have an account? 
+                    <span id="showLoginLink">Login</span>
+                </p>
+            </div>
+
+            <!-- Login Section -->
+            <div id="login-section" style="display:none;">
+                <h2>Login</h2>
+                
+                <div class="auth-form">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    <button id="loginBtn">Login</button>
+                </div>
+                
+                <p class="auth-switch">
+                    Don't have an account? 
+                    <span id="showRegisterLink">Register</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD -->
+    <div id="admin-dashboard">
+        <div class="modal-box">
+            <span class="close-btn" id="closeAdminDashboardBtn">✖</span>
+            <h2>Admin Dashboard - Adoption Requests</h2>
+            
+            <div class="table-container">
+                <table id="adoption-requests-table">
+                    <thead>
+                        <tr>
+                            <th>Pet ID</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Household</th>
+                            <th>Home Type</th>
+                            <th>Pet Type</th>
+                            <th>Date</th>
+                            <th>Message</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adoption-requests"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Button -->
+    <button id="show-admin-btn">Show Admin Dashboard</button>
+
+    <!-- FIREBASE SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <!-- External JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
